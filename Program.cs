@@ -4,12 +4,12 @@
     {
         static int width = System.Console.WindowWidth;
         static int height = System.Console.WindowHeight;
-        static float ratioChar = 11.0f / 27.0f;
+        static double ratioChar = 11d / 23d;
+        static double ratioAspect;
 
         static char[] screen = new char[width * height];
 
         static double frame = 0;
-
 
         static void Main(string[] args)
         {
@@ -19,6 +19,7 @@
                 width = System.Console.WindowWidth;
                 height = System.Console.WindowHeight;
                 screen = new char[width * height];
+                ratioAspect = (double)width / (double)height;
                 Draw();
                 frame += 0.05;
             }
@@ -36,10 +37,15 @@
             {
                 for (int j = 0; j < width; j++)
                 {
-                    int x = (int)((j - width / 2) * ratioChar);
-                    int y = height / 2 - i;
+                    double x = j / (double)width * 2d - 1;
+                    double y = i / (double)height * 2d - 1;
+                    x *= ratioAspect * ratioChar;
+
+
                     screen[i * width + j] = ' ';
-                    if ((Math.Pow(x - (Math.Cos(frame) * 50.0), 2) + (Math.Pow(y - (Math.Sin(frame) * 50.0), 2))) <= 100) screen[i * width + j] = '@';
+
+                    if (x * x + y * y < 0.5)
+                        screen[i * width + j] = '@';
                 }
             }
             System.Console.Write(screen);
